@@ -62,6 +62,12 @@ class NewGatePass:
                 vehicle = self.visitor_vehicle.get();
                 cur.execute('INSERT INTO visitors VALUES (NULL,?,?,?,?)',
                             (name, contact, address, vehicle))
+
+                print('row id : ' + str(cur.lastrowid))
+                cur.execute('INSERT INTO visitors_log(visitorid) VALUES(?)',
+                            (cur.lastrowid,))
+                con.commit()
+
                 con.commit()
                 messagebox.showinfo('Success', 'Gate pass created', parent=self.root)
                 self.root.quit()

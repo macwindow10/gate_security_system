@@ -53,10 +53,10 @@ class Login_System:
                 if user == None:
                     messagebox.showerror("Error", "Invalid USERNAME/PASSWORD", parent=self.root)
                 else:
-                    if user[0] == 'Admin':
+                    if user[0] == 'ADMIN':
                         self.root.destroy()
                         os.system("python dashboard.py")
-                    elif user[0] == 'Manager':
+                    elif user[0] == 'MANAGER':
                         self.root.destroy()
                         os.system("python dashboard_manager.py")
                     else:
