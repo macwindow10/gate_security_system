@@ -23,14 +23,23 @@ class DashboardGuard:
         # ===Left Menu ====
         LeftMenu = Frame(self.root, bd=5, relief=SOLID, bg='white')
         LeftMenu.place(x=0, y=102, width=200, height=565)
-        lbl_menu = Label(LeftMenu, text='Menu', font=('times new roman', 20), bg='green').pack(side=TOP, fill=X)
-        btn_newgatepass = Button(LeftMenu, text='New Gate Pass', command=self.button_newgatepass, font=('times new roman', 20, 'bold'),
-                              bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
+        lbl_menu = Label(LeftMenu, text='Menu', font=('times new roman', 16), bg='green').pack(side=TOP, fill=X)
+        btn_newgatepass = Button(LeftMenu, text='New Gate Pass', command=self.button_newgatepass,
+                                 font=('times new roman', 16, 'bold'),
+                                 bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
+        btn_viewgatepasses = Button(LeftMenu, text='View Gate Passes', command=self.button_viewgatepasses,
+                                 font=('times new roman', 16, 'bold'),
+                                 bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
 
     def button_newgatepass(self):
         print('button_newgatepass')
-        self.root.destroy()
+        # self.root.destroy()
         os.system('python newgatepass.py')
+
+    def button_viewgatepasses(self):
+        print('button_viewgatepasses')
+        # self.root.destroy()
+        os.system('python viewgatepasses.py')
 
     def logout(self):
         self.root.destroy()

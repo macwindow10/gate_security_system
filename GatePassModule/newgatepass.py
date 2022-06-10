@@ -60,11 +60,11 @@ class NewGatePass:
                 contact = self.visitor_contact.get();
                 address = self.visitor_address.get();
                 vehicle = self.visitor_vehicle.get();
-                cur.execute('INSERT INTO visitors VALUES (?,?,?,?)',
+                cur.execute('INSERT INTO visitors VALUES (NULL,?,?,?,?)',
                             (name, contact, address, vehicle))
                 con.commit()
                 messagebox.showinfo('Success', 'Gate pass created', parent=self.root)
-
+                self.root.quit()
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
