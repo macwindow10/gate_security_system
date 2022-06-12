@@ -1,3 +1,4 @@
+import datetime
 import sys
 from tkinter import *
 from tkinter import ttk, messagebox
@@ -16,6 +17,11 @@ class ViewGatePasses:
         # ------All variables---------
         self.var_searchby = StringVar()
         self.var_searchtxt = StringVar()
+        self.selected_visitor_log_id = StringVar()
+        self.selected_visitor_log_approved = StringVar()
+        self.selected_visitor_log_entry_time = StringVar()
+        self.selected_visitor_log_valid_till = StringVar()
+        self.selected_visitor_log_exit_time = StringVar()
 
         # ------Search Frame--------
         SearchFrame = LabelFrame(self.root, text='Search Gate Pass', font=('times new roman', 12, 'bold'), bg='white',
@@ -35,14 +41,20 @@ class ViewGatePasses:
         btn_search = Button(SearchFrame, text='Search', command=self.search, font=('times new roman', 15), bg='#4caf50',
                             fg='white').place(x=410, y=9, width=150, height=30)
 
+        button_enter_visitor = Button(self.root, text='Enter Visitor', command=self.enter_visitor,
+                                      font=('times new roman', 15), bg='#4caf50',
+                                      fg='white').place(x=200, y=130, width=150, height=30)
+        button_exit_visitor = Button(self.root, text='Exit Visitor', command=self.exit_visitor,
+                                     font=('times new roman', 15), bg='#4caf50',
+                                     fg='white').place(x=400, y=130, width=150, height=30)
+
         # =============== Gate Pass Details Grid =========
         emp_frame = Frame(self.root, bd=3, relief=RIDGE)
-        emp_frame.place(x=0, y=150, relwidth=1, height=300)
+        emp_frame.place(x=0, y=170, relwidth=1, height=300)
         scrolly = Scrollbar(emp_frame, orient=VERTICAL)
         scrollx = Scrollbar(emp_frame, orient=HORIZONTAL)
 
         # What's in columns is case sensitive cuz these headings are going to go the db
-
         self.gatePassTable = ttk.Treeview(emp_frame, columns=(
             'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime',
             'validtill', 'exittime'),
@@ -84,18 +96,24 @@ class ViewGatePasses:
         self.gatePassTable.bind('<ButtonRelease-1>', self.get_data)
         self.show()
 
-    # Data thats in the db should reflect
+    # Data that's in the db should reflect
     def get_data(self, ev):
         f = self.gatePassTable.focus()
         content = (self.gatePassTable.item(f))
         row = content['values']
         print(row)
+        self.selected_visitor_log_id.set(row[5])
+        self.selected_visitor_log_approved.set(row[6])
+        self.selected_visitor_log_entry_time.set(row[8])
+        self.selected_visitor_log_valid_till.set(row[9])
+        self.selected_visitor_log_exit_time.set(row[10])
 
     def show(self):
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
-            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, e.name approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime ' +
+            cur.execute(
+                'SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, e.name approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime ' +
                 'FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id LEFT JOIN employee e ON vl.approvedbyemployeeid=e.eid ')
             rows = cur.fetchall()
             self.gatePassTable.delete(*self.gatePassTable.get_children())
@@ -104,7 +122,43 @@ class ViewGatePasses:
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
-    # Now search query
+    def enter_visitor(self):
+        print('enter_visitor')
+        print(self.selected_visitor_log_approved.get())
+        print(self.selected_visitor_log_entry_time.get())
+        print(self.selected_visitor_log_valid_till.get())
+        print(self.selected_visitor_log_exit_time.get())
+
+        con = sqlite3.connect(database=r'../ims.db')
+        cur = con.cursor()
+        try:
+            if self.selected_visitor_log_id.get() == "":
+                messagebox.showerror("Error", "No gate pass entry selected", parent=self.root)
+                return
+            if self.selected_visitor_log_approved.get() != "Approved":
+                messagebox.showerror("Error", "Gate pass is not approved", parent=self.root)
+                return
+            if self.selected_visitor_log_entry_time.get() is None:
+                messagebox.showerror("Error", "Visitor already entered on this gate pass", parent=self.root)
+                return
+            if self.selected_visitor_log_exit_time.get() is None:
+                messagebox.showerror("Error", "Visitor already exit on this gate pass", parent=self.root)
+                return
+
+            current_date_time = datetime.datetime.now()
+            cur.execute(
+                'UPDATE visitors_log SET entry_time=? WHERE id=?',
+                (current_date_time, self.selected_visitor_log_id))
+            con.commit()
+            messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
+            self.show()
+
+        except Exception as ex:
+            messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
+
+    def exit_visitor(self):
+        print('exit_visitor')
+
     def search(self):
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
