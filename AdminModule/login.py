@@ -47,18 +47,19 @@ class Login_System:
             if self.employeeid.get() == "" or self.password.get() == "":
                 messagebox.showerror("Error", "All fields are required", parent=self.root)
             else:
-                cur.execute('select utype from employee where eid = ? AND pass = ?',
+                cur.execute('select utype, name from employee where eid = ? AND pass = ?',
                             (self.employeeid.get(), self.password.get()))
                 user = cur.fetchone()
+                print(user[0])
                 if user == None:
                     messagebox.showerror("Error", "Invalid USERNAME/PASSWORD", parent=self.root)
                 else:
                     if user[0] == 'ADMIN':
                         self.root.destroy()
-                        os.system("python dashboard.py")
+                        os.system("python dashboard.py {} {}".format("ADMIN", user[1]))
                     elif user[0] == 'MANAGER':
                         self.root.destroy()
-                        os.system("python dashboard_manager.py")
+                        os.system("python dashboard_manager.py {} {}".format("MANAGER", user[1]))
                     else:
                         self.root.destroy()
                         os.system("python dashboard_guard.py")

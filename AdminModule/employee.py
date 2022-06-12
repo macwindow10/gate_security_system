@@ -214,10 +214,6 @@ class employeeClass:
             for row in rows:
                 self.EmployeeTable.insert('', END, values=row)
 
-
-
-
-
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
