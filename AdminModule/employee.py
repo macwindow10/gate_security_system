@@ -6,7 +6,7 @@ import sqlite3
 class employeeClass:
     def __init__(self, root):
         self.root = root
-        self.root.geometry('880x450+0+0')
+        self.root.geometry('1100x450+0+0')
         self.root.title('Security Management System')
         self.root.config(bg='white')
         self.root.focus_force()
@@ -45,7 +45,7 @@ class employeeClass:
 
         # ----Title-----
         title = Label(self.root, text='Employee Details', font=('times new roman', 15), bg='#0f4d7d', fg='white').place(
-            x=50, y=100, width=800)
+            x=50, y=100, width=990)
 
         # ----Content-----
         # ----Row 1 ------
@@ -119,7 +119,6 @@ class employeeClass:
         scrollx = Scrollbar(emp_frame, orient=HORIZONTAL)
 
         # Whats in columns is case senstive cuz these headings are going to go the db
-
         self.EmployeeTable = ttk.Treeview(emp_frame, columns=(
         'eid', 'name', 'email', 'gender', 'contact', 'dob', 'doj', 'pass', 'utype', 'address', 'salary'),
                                           yscrollcommand=scrolly.set, xscrollcommand=scrollx.set)

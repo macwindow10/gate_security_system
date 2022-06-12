@@ -4,16 +4,18 @@ import sqlite3
 
 
 class ViewGatePasses:
-    def __init__(self, root):
+    def __init__(self, root, userid):
         self.root = root
         self.root.geometry('880x450+0+0')
         self.root.title('Security Management System')
         self.root.config(bg='white')
         self.root.focus_force()
+        self.userid = userid;
 
         # ------All variables---------
         self.var_searchby = StringVar()
         self.var_searchtxt = StringVar()
+        self.selected_visitor_log_id = StringVar()
 
         # ------Search Frame--------
         SearchFrame = LabelFrame(self.root, text='Search Gate Pass', font=('times new roman', 12, 'bold'), bg='white',
@@ -90,13 +92,16 @@ class ViewGatePasses:
         content = (self.gatePassTable.item(f))
         row = content['values']
         print(row)
+        self.selected_visitor_log_id.set(row[5])
+        print(self.selected_visitor_log_id.get())
 
     def show(self):
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
             cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approvedbyemployeeid approved, vl.entrytime, vl.validtill, vl.exittime \
-                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id')
+                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id \
+                        WHERE vl.approvedbyemployeeid IS NULL')
             rows = cur.fetchall()
             self.gatePassTable.delete(*self.gatePassTable.get_children())
             for row in rows:
@@ -104,7 +109,6 @@ class ViewGatePasses:
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
-    # Now search query
     def search(self):
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
@@ -139,9 +143,27 @@ class ViewGatePasses:
         print('approve_gate_pass')
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
+        try:
+            print(self.selected_visitor_log_id.get())
+            if self.selected_visitor_log_id.get() == "":
+                messagebox.showerror("Error", "No gate pass entry selected", parent=self.root)
+            else:
+                cur.execute("SELECT * FROM visitors_log WHERE id = ? ", (self.selected_visitor_log_id.get(),))
+                row = cur.fetchone()
+                if row == None:
+                    messagebox.showerror("Error", "Invalid ID!", parent=self.root)
+                else:
+                    cur.execute(
+                        'UPDATE visitors_log SET approvedbyemployeeid=? WHERE id=?',
+                        (self.userid, self.selected_visitor_log_id.get(),))
+                    con.commit()
+                    messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
+                    self.show()
+        except Exception as ex:
+            messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
 
 if __name__ == "__main__":
     root = Tk()
-    obj = ViewGatePasses(root)
+    obj = ViewGatePasses(root, sys.argv[1])
     root.mainloop()

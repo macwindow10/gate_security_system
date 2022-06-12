@@ -6,11 +6,12 @@ from employee import employeeClass
 
 
 class IMS:
-    def __init__(self, root, role, username):
+    def __init__(self, root, role, userid, username):
         self.root = root
         self.root.geometry('1350x700+0+0')
         self.root.title('Security Management System')
         self.role = role
+        self.userid = userid
         self.username = username
         # self.root.config(bg = 'yellow')
 
@@ -23,8 +24,10 @@ class IMS:
         btn_logout = Button(self.root, text='Logout', command=self.logout, font=('times new roman', 15, 'bold'),
                             bg='pink', cursor='hand2').place(x=800, y=20, height=30, width=150)
 
-        lbl_clock = Label(self.root, text='Welcome to Security Management System - {} ({})'.format(self.username, self.role), font=('times new roman', 15),
-                               bg='black', fg='white')
+        lbl_clock = Label(self.root,
+                          text='Welcome to Security Management System - {} ({})'.format(self.username, self.role),
+                          font=('times new roman', 15),
+                          bg='black', fg='white')
         lbl_clock.place(x=0, y=70, relwidth=1, height=30)
 
         # ===Left Menu ====
@@ -61,31 +64,10 @@ class IMS:
         self.new_win = Toplevel(self.root)
         self.new_obj = employeeClass(self.new_win)
 
-        # try:
-    #         cur.execute('select * from product')
-    #        product = cur.fetchall()
-    #       self.lbl_item.config(text = f'Total Items \n [{str(len(product))}]')
-
-    #      cur.execute('select * from category')
-    #     category = cur.fetchall()
-    #    self.lbl_category.config(text = f'Categories \n [{str(len(category))}]')
-
-    #   cur.execute('select * from employee')
-    #  employee = cur.fetchall()
-    # self.lbl_employee.config(text = f'Total Employees \n [{str(len(employee))}]')
-
-    # time_ = time.strftime("%I:::%M::::%S")
-    # date_ = time.strftime("%d-%m-%Y")
-    # self.lbl_clock.config( text = f'Welcome to Bakery Management System \t\t Date: {str(date_)} \t\t Time: {str(time_)}' )
-    # self.lbl_clock.after(5000,self.update_content)
-
-    #        except Exception as ex:
-    #           messagebox.showerror("Error",f"Error due to : str{(ex)}",parent = self.root)
-
     def button_viewgatepasses(self):
         print('button_viewgatepasses')
         # self.root.destroy()
-        os.system('python viewgatepasses.py')
+        os.system('python viewgatepasses.py {}'.format(self.userid))
 
     def logout(self):
         self.root.destroy()
@@ -100,8 +82,8 @@ if __name__ == "__main__":
     # print("\nName of Python script:", sys.argv[0])
     # print("\nArguments passed:", end=" ")
     for i in range(1, n):
-       print(sys.argv[i], end=" ")
+        print(sys.argv[i], end=" ")
 
     root = Tk()
-    obj = IMS(root, sys.argv[1], sys.argv[2])
+    obj = IMS(root, sys.argv[1], sys.argv[2], sys.argv[3])
     root.mainloop()

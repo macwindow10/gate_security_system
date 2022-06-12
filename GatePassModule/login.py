@@ -49,7 +49,7 @@ class Login_System:
             else:
                 eid = self.employeeid.get();
                 pwd = self.password.get();
-                cur.execute('select utype from employee where eid = ? AND pass = ?',
+                cur.execute('select utype, eid, name from employee where eid = ? AND pass = ?',
                             (eid, pwd))
                 user = cur.fetchone()
                 if user == None:
@@ -57,7 +57,7 @@ class Login_System:
                 else:
                     if user[0] == 'GUARD':
                         self.root.destroy()
-                        os.system("python dashboard_guard.py")
+                        os.system("python dashboard_guard.py {} {} {}".format("GUARD", user[1], user[2]))
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 

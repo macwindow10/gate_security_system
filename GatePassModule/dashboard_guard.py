@@ -1,12 +1,16 @@
 import os
+import sys
 from tkinter import *
 
 
 class DashboardGuard:
-    def __init__(self, root):
+    def __init__(self, root, role, userid, username):
         self.root = root
         self.root.geometry('1350x700+0+0')
         self.root.title('Security Management System')
+        self.role = role
+        self.userid = userid
+        self.username = username
 
         title = Label(self.root, text='Security Management System', compound=LEFT, font=('times new roman', 40, 'bold'),
                       bg='#011a18', fg='white', anchor='w', padx=20).place(x=0, y=0, relwidth=1, height=70)
@@ -16,7 +20,7 @@ class DashboardGuard:
                             bg='pink', cursor='hand2').place(x=800, y=20, height=30, width=150)
 
         # ====clock =====
-        self.lbl_clock = Label(self.root, text='Welcome to Security Management System ', font=('times new roman', 15),
+        self.lbl_clock = Label(self.root, text='Welcome to Security Management System - {} ({})'.format(self.username, self.role), font=('times new roman', 15),
                                bg='black', fg='white')
         self.lbl_clock.place(x=0, y=70, relwidth=1, height=30)
 
@@ -39,7 +43,7 @@ class DashboardGuard:
     def button_viewgatepasses(self):
         print('button_viewgatepasses')
         # self.root.destroy()
-        os.system('python viewgatepasses.py')
+        os.system('python viewgatepasses.py {}'.format(self.userid))
 
     def logout(self):
         self.root.destroy()
@@ -49,5 +53,5 @@ class DashboardGuard:
 if __name__ == "__main__":
     root = Tk()
     print('DashboardGuard')
-    obj = DashboardGuard(root)
+    obj = DashboardGuard(root, sys.argv[1], sys.argv[2], sys.argv[3])
     root.mainloop()

@@ -35,19 +35,13 @@ class Login_System:
                            bg='red', fg='white').place(x=190, y=210, width=100, height=25)
 
     def login(self):
-        # if self.username.get() == "" or self.password.get() == "":
-        #    messagebox.showerror("Error", "All fields are required")
-        # elif self.username.get() != "abc" or self.password.get() != "abc":
-        #    messagebox.showerror("Error", "Invalid username or password")
-        # else:
-        #    messagebox.showinfo("Infomation", f"Welcome:{self.username.get()} \n Your password: {self.password.get()} ")
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
             if self.employeeid.get() == "" or self.password.get() == "":
                 messagebox.showerror("Error", "All fields are required", parent=self.root)
             else:
-                cur.execute('select utype, name from employee where eid = ? AND pass = ?',
+                cur.execute('select utype, eid, name from employee where eid = ? AND pass = ?',
                             (self.employeeid.get(), self.password.get()))
                 user = cur.fetchone()
                 print(user[0])
@@ -56,10 +50,10 @@ class Login_System:
                 else:
                     if user[0] == 'ADMIN':
                         self.root.destroy()
-                        os.system("python dashboard.py {} {}".format("ADMIN", user[1]))
+                        os.system("python dashboard.py {} {} {}".format("ADMIN", user[1], user[2]))
                     elif user[0] == 'MANAGER':
                         self.root.destroy()
-                        os.system("python dashboard_manager.py {} {}".format("MANAGER", user[1]))
+                        os.system("python dashboard_manager.py {} {} {}".format("MANAGER", user[1], user[2]))
                     else:
                         self.root.destroy()
                         os.system("python dashboard_guard.py")
