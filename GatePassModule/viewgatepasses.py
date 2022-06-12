@@ -44,7 +44,8 @@ class ViewGatePasses:
         # What's in columns is case sensitive cuz these headings are going to go the db
 
         self.gatePassTable = ttk.Treeview(emp_frame, columns=(
-            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime', 'validtill', 'exittime'),
+            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime',
+            'validtill', 'exittime'),
                                           yscrollcommand=scrolly.set, xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM, fill=X)
         scrolly.pack(side=RIGHT, fill=Y)
@@ -94,8 +95,8 @@ class ViewGatePasses:
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
-            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approved, vl.approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
-                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id')
+            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, e.name approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime ' +
+                'FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id LEFT JOIN employee e ON vl.approvedbyemployeeid=e.eid ')
             rows = cur.fetchall()
             self.gatePassTable.delete(*self.gatePassTable.get_children())
             for row in rows:
@@ -115,15 +116,16 @@ class ViewGatePasses:
             else:
                 search_column_name = ''
                 if self.var_searchby.get() == 'Visitor Name':
-                    search_column_name = 'name'
+                    search_column_name = 'v.name'
                 elif self.var_searchby.get() == 'Contact':
-                    search_column_name = 'contact'
+                    search_column_name = 'v.contact'
                 elif self.var_searchby.get() == 'Vehicle':
-                    search_column_name = 'vehicle'
+                    search_column_name = 'v.vehicle'
 
-                cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approved approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
-                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id' +
-                            ' WHERE ' + search_column_name + " LIKE '%" + self.var_searchtxt.get() + "%'")
+                cur.execute(
+                    'SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, e.name approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime ' +
+                    'FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id LEFT JOIN employee e ON vl.approvedbyemployeeid=e.eid ' +
+                    'WHERE ' + search_column_name + " LIKE '%" + self.var_searchtxt.get() + "%'")
                 rows = cur.fetchall()
                 if len(rows) != 0:
                     self.gatePassTable.delete(*self.gatePassTable.get_children())

@@ -55,6 +55,7 @@ class Login_System:
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
+
 root = Tk()
 obj = Login_System(root)
 root.mainloop()

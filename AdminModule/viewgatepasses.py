@@ -100,7 +100,7 @@ class ViewGatePasses:
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
-            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approved approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
+            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
                         FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id \
                         WHERE vl.approvedbyemployeeid IS NULL')
             rows = cur.fetchall()
@@ -127,7 +127,7 @@ class ViewGatePasses:
                 elif self.var_searchby.get() == 'Vehicle':
                     search_column_name = 'vehicle'
 
-                cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approvedbyemployeeid approved, vl.entrytime, vl.validtill, vl.exittime \
+                cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
                         FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id' +
                             ' WHERE ' + search_column_name + " LIKE '%" + self.var_searchtxt.get() + "%'")
                 rows = cur.fetchall()
