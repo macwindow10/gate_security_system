@@ -35,12 +35,6 @@ class Login_System:
                            bg='red', fg='white').place(x=190, y=210, width=100, height=25)
 
     def login(self):
-        # if self.username.get() == "" or self.password.get() == "":
-        #    messagebox.showerror("Error", "All fields are required")
-        # elif self.username.get() != "abc" or self.password.get() != "abc":
-        #    messagebox.showerror("Error", "Invalid username or password")
-        # else:
-        #    messagebox.showinfo("Infomation", f"Welcome:{self.username.get()} \n Your password: {self.password.get()} ")
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:

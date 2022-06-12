@@ -7,7 +7,7 @@ import sqlite3
 class ViewGatePasses:
     def __init__(self, root, userid):
         self.root = root
-        self.root.geometry('880x450+0+0')
+        self.root.geometry('1000x450+0+0')
         self.root.title('Security Management System')
         self.root.config(bg='white')
         self.root.focus_force()
@@ -44,7 +44,7 @@ class ViewGatePasses:
         # What's in columns is case sensitive cuz these headings are going to go the db
 
         self.gatePassTable = ttk.Treeview(emp_frame, columns=(
-            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'entrytime', 'validtill', 'exittime'),
+            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime', 'validtill', 'exittime'),
                                           yscrollcommand=scrolly.set, xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM, fill=X)
         scrolly.pack(side=RIGHT, fill=Y)
@@ -60,6 +60,7 @@ class ViewGatePasses:
         self.gatePassTable.heading("vehicle", text='Vehicle')
         self.gatePassTable.heading("vlid", text='Gate Pass ID')
         self.gatePassTable.heading("approved", text='Approved?')
+        self.gatePassTable.heading("approvedbyemployeeid", text='Approved/Rejected By')
         self.gatePassTable.heading("entrytime", text='Entry Time')
         self.gatePassTable.heading("validtill", text='Valid Till')
         self.gatePassTable.heading("exittime", text='Exit Time')
@@ -70,14 +71,14 @@ class ViewGatePasses:
         self.gatePassTable.column("name", width=90)
         self.gatePassTable.column("contact", width=90)
         self.gatePassTable.column("address", width=90)
-        self.gatePassTable.column("vehicle", width=90)
-        self.gatePassTable.column("vlid", width=90)
-        self.gatePassTable.column("approved", width=60)
+        self.gatePassTable.column("vehicle", width=70)
+        self.gatePassTable.column("vlid", width=80)
+        self.gatePassTable.column("approved", width=80)
+        self.gatePassTable.column("approvedbyemployeeid", width=140)
         self.gatePassTable.column("entrytime", width=90)
         self.gatePassTable.column("validtill", width=90)
         self.gatePassTable.column("exittime", width=90)
         # Now the headings are too big, we wanna make them a bit smaller
-
         self.gatePassTable.pack(fill=BOTH, expand=1)
         self.gatePassTable.bind('<ButtonRelease-1>', self.get_data)
         self.show()
@@ -93,7 +94,7 @@ class ViewGatePasses:
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
-            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approvedbyemployeeid approved, vl.entrytime, vl.validtill, vl.exittime \
+            cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approved, vl.approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
                         FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id')
             rows = cur.fetchall()
             self.gatePassTable.delete(*self.gatePassTable.get_children())
@@ -120,7 +121,7 @@ class ViewGatePasses:
                 elif self.var_searchby.get() == 'Vehicle':
                     search_column_name = 'vehicle'
 
-                cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approvedbyemployeeid approved, vl.entrytime, vl.validtill, vl.exittime \
+                cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, vl.approved approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
                         FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id' +
                             ' WHERE ' + search_column_name + " LIKE '%" + self.var_searchtxt.get() + "%'")
                 rows = cur.fetchall()

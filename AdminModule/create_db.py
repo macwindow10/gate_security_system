@@ -19,7 +19,7 @@ def create_db():
     cur.execute("CREATE TABLE IF NOT EXISTS visitors(id INTEGER PRIMARY KEY AUTOINCREMENT, name text, contact text, address text, vehicle text)")
     print('visitors')
 
-    cur.execute("CREATE TABLE IF NOT EXISTS visitors_log(id INTEGER PRIMARY KEY AUTOINCREMENT, visitorid INTEGER, approvedbyemployeeid INTEGER, entrytime date, validtill date, exittime date)")
+    cur.execute("CREATE TABLE IF NOT EXISTS visitors_log(id INTEGER PRIMARY KEY AUTOINCREMENT, visitorid INTEGER, approved INTEGER DEFAULT 0, approvedbyemployeeid INTEGER DEFAULT NULL, entrytime date DEFAULT NULL, validtill date DEFAULT NULL, exittime date DEFAULT NULL)")
     print('visitors_log')
 
     con.commit()
