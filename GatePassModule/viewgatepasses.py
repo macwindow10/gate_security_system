@@ -141,10 +141,10 @@ class ViewGatePasses:
             if self.selected_visitor_log_approved.get() != "Approved":
                 messagebox.showerror("Error", "Gate pass is not approved", parent=self.root)
                 return
-            if self.selected_visitor_log_entry_time.get() is not None:
+            if self.selected_visitor_log_entry_time.get() != "None":
                 messagebox.showerror("Error", "Visitor already entered on this gate pass", parent=self.root)
                 return
-            if self.selected_visitor_log_exit_time.get() is not None:
+            if self.selected_visitor_log_exit_time.get() != "None":
                 messagebox.showerror("Error", "Visitor already exit on this gate pass", parent=self.root)
                 return
 
