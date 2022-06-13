@@ -16,6 +16,7 @@ class ViewGatePasses:
         self.var_searchby = StringVar()
         self.var_searchtxt = StringVar()
         self.selected_visitor_log_id = StringVar()
+        self.selected_visitor_log_approved = StringVar()
 
         # ------Search Frame--------
         SearchFrame = LabelFrame(self.root, text='Search Gate Pass', font=('times new roman', 12, 'bold'), bg='white',
@@ -47,7 +48,8 @@ class ViewGatePasses:
 
         # What's in columns is case sensitive cuz these headings are going to go the db
         self.gatePassTable = ttk.Treeview(emp_frame, columns=(
-            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime', 'validtill', 'exittime'),
+            'vid', 'name', 'contact', 'address', 'vehicle', 'vlid', 'approved', 'approvedbyemployeeid', 'entrytime',
+            'validtill', 'exittime'),
                                           yscrollcommand=scrolly.set, xscrollcommand=scrollx.set)
         scrollx.pack(side=BOTTOM, fill=X)
         scrolly.pack(side=RIGHT, fill=Y)
@@ -86,7 +88,7 @@ class ViewGatePasses:
         self.gatePassTable.bind('<ButtonRelease-1>', self.get_data)
         self.show()
 
-    # Data thats in the db should reflect
+    # Data that's in the db should reflect
     def get_data(self, ev):
         print('get_data')
         f = self.gatePassTable.focus()
@@ -94,15 +96,15 @@ class ViewGatePasses:
         row = content['values']
         print(row)
         self.selected_visitor_log_id.set(row[5])
-        print(self.selected_visitor_log_id.get())
+        self.selected_visitor_log_approved.set(row[6])
+        # print(self.selected_visitor_log_id.get())
 
     def show(self):
         con = sqlite3.connect(database=r'../ims.db')
         cur = con.cursor()
         try:
             cur.execute('SELECT	v.id vid, v.name, v.contact, v.address, v.vehicle, vl.id vlid, CASE vl.approved WHEN 0 THEN \'Not Approved\' WHEN 1 THEN \'Approved\' WHEN 2 THEN \'Rejected\' END approved, vl.approvedbyemployeeid approvedbyemployeeid, vl.entrytime, vl.validtill, vl.exittime \
-                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id \
-                        WHERE vl.approvedbyemployeeid IS NULL')
+                        FROM visitors_log vl INNER JOIN visitors v ON vl.visitorid=v.id')
             rows = cur.fetchall()
             self.gatePassTable.delete(*self.gatePassTable.get_children())
             for row in rows:
@@ -148,18 +150,22 @@ class ViewGatePasses:
             print(self.selected_visitor_log_id.get())
             if self.selected_visitor_log_id.get() == "":
                 messagebox.showerror("Error", "No gate pass entry selected", parent=self.root)
+                return
+            if self.selected_visitor_log_approved.get() == "Approved":
+                messagebox.showerror("Error", "Gate pass already approved", parent=self.root)
+                return
+
+            cur.execute("SELECT * FROM visitors_log WHERE id = ? ", (self.selected_visitor_log_id.get(),))
+            row = cur.fetchone()
+            if row is None:
+                messagebox.showerror("Error", "Invalid ID!", parent=self.root)
             else:
-                cur.execute("SELECT * FROM visitors_log WHERE id = ? ", (self.selected_visitor_log_id.get(),))
-                row = cur.fetchone()
-                if row == None:
-                    messagebox.showerror("Error", "Invalid ID!", parent=self.root)
-                else:
-                    cur.execute(
-                        'UPDATE visitors_log SET approved=?, approvedbyemployeeid=? WHERE id=?',
-                        (1, self.userid, self.selected_visitor_log_id.get(),))
-                    con.commit()
-                    messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
-                    self.show()
+                cur.execute(
+                    'UPDATE visitors_log SET approved=?, approvedbyemployeeid=? WHERE id=?',
+                    (1, self.userid, self.selected_visitor_log_id.get(),))
+                con.commit()
+                messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
+                self.show()
         except Exception as ex:
             messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 

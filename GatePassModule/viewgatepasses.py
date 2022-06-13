@@ -124,10 +124,10 @@ class ViewGatePasses:
 
     def enter_visitor(self):
         print('enter_visitor')
-        print(self.selected_visitor_log_approved.get())
-        print(self.selected_visitor_log_entry_time.get())
-        print(self.selected_visitor_log_valid_till.get())
-        print(self.selected_visitor_log_exit_time.get())
+        #print(self.selected_visitor_log_approved.get())
+        #print(self.selected_visitor_log_entry_time.get())
+        #print(self.selected_visitor_log_valid_till.get())
+        #print(self.selected_visitor_log_exit_time.get())
 
         con = sqlite3.connect(database=r'../ims.db',
                               detect_types=sqlite3.PARSE_DECLTYPES |
@@ -153,7 +153,7 @@ class ViewGatePasses:
                 'UPDATE visitors_log SET entrytime=? WHERE id=?',
                 (current_date_time, self.selected_visitor_log_id.get()))
             con.commit()
-            messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
+            messagebox.showinfo('Success', 'Visitor entered', parent=self.root)
             self.show()
 
         except Exception as ex:
@@ -161,6 +161,35 @@ class ViewGatePasses:
 
     def exit_visitor(self):
         print('exit_visitor')
+        con = sqlite3.connect(database=r'../ims.db',
+                              detect_types=sqlite3.PARSE_DECLTYPES |
+                                           sqlite3.PARSE_COLNAMES
+                              )
+        cur = con.cursor()
+        try:
+            if self.selected_visitor_log_id.get() == "":
+                messagebox.showerror("Error", "No gate pass entry selected", parent=self.root)
+                return
+            if self.selected_visitor_log_approved.get() != "Approved":
+                messagebox.showerror("Error", "Gate pass is not approved", parent=self.root)
+                return
+            if self.selected_visitor_log_entry_time.get() == "None":
+                messagebox.showerror("Error", "Visitor is not entered on this gate pass", parent=self.root)
+                return
+            if self.selected_visitor_log_exit_time.get() != "None":
+                messagebox.showerror("Error", "Visitor already exit on this gate pass", parent=self.root)
+                return
+
+            current_date_time = datetime.datetime.now()
+            cur.execute(
+                'UPDATE visitors_log SET exittime=? WHERE id=?',
+                (current_date_time, self.selected_visitor_log_id.get()))
+            con.commit()
+            messagebox.showinfo('Success', 'Visitor exit', parent=self.root)
+            self.show()
+
+        except Exception as ex:
+            messagebox.showerror("Error", f"Error due to : str{(ex)}", parent=self.root)
 
     def search(self):
         con = sqlite3.connect(database=r'../ims.db')
