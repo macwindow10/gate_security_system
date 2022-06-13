@@ -83,15 +83,18 @@ class NewGatePass:
                 contact = self.visitor_contact.get();
                 address = self.visitor_address.get();
                 vehicle = self.visitor_vehicle.get();
-                cur.execute('INSERT INTO visitors VALUES (NULL,?,?,?,?)',
-                            (name, contact, address, vehicle))
+                co_visitors = self.visitor_co_visitors.get();
+                belongings = self.visitor_belongings.get();
+                host_name = self.host_name.get();
+                host_contact = self.host_contact.get();
+                cur.execute('INSERT INTO visitors VALUES (NULL,?,?,?,?,?,?,?,?)',
+                            (name, contact, address, vehicle, co_visitors, belongings, host_name, host_contact))
 
                 print('row id : ' + str(cur.lastrowid))
                 cur.execute('INSERT INTO visitors_log(visitorid) VALUES(?)',
                             (cur.lastrowid,))
                 con.commit()
 
-                con.commit()
                 messagebox.showinfo('Success', 'Gate pass created', parent=self.root)
                 self.root.quit()
         except Exception as ex:
