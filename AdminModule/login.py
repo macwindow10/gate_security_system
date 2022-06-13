@@ -53,7 +53,7 @@ class Login_System:
                         os.system("python dashboard.py {} {} {}".format("ADMIN", user[1], user[2]))
                     elif user[0] == 'MANAGER':
                         self.root.destroy()
-                        os.system("python dashboard_manager.py {} {} {}".format("MANAGER", user[1], user[2]))
+                        os.system("python dashboard.py {} {} {}".format("MANAGER", user[1], user[2]))
                     else:
                         self.root.destroy()
                         os.system("python dashboard_guard.py")

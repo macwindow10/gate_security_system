@@ -32,12 +32,13 @@ class IMS:
 
         # ===Left Menu ====
         LeftMenu = Frame(self.root, bd=5, relief=SOLID, bg='white')
-        LeftMenu.place(x=0, y=102, width=200, height=565)
-        lbl_menu = Label(LeftMenu, text='Menu', font=('times new roman', 16), bg='green').pack(side=TOP, fill=X)
-        btn_employee = Button(LeftMenu, text='Employee', command=self.employee, font=('times new roman', 16, 'bold'),
-                              bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
-        btn_view_gate_passes = Button(LeftMenu, text='View Gate Passes', command=self.button_viewgatepasses,
-                                      font=('times new roman', 16, 'bold'),
+        LeftMenu.place(x=0, y=102, width=370, height=565)
+        lbl_menu = Label(LeftMenu, text='Menu', font=('times new roman', 16, 'bold'), bg='green').pack(side=TOP, fill=X)
+        if self.role == 'ADMIN':
+            btn_employee = Button(LeftMenu, text='Manage Administrators/Managers/Guards', command=self.employee, font=('times new roman', 14, 'bold'),
+                                  bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
+        btn_view_gate_passes = Button(LeftMenu, text='View/Approve/Reject Gate Passes', command=self.button_viewgatepasses,
+                                      font=('times new roman', 14, 'bold'),
                                       bg='yellow', bd=3, cursor='hand2').pack(side=TOP, fill=X)
 
         # ====Content =====

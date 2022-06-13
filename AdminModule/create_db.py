@@ -16,7 +16,7 @@ def create_db():
     #cur.execute("INSERT INTO roles VALUES(3, 'GUARD')")
     print('roles')
 
-    cur.execute("CREATE TABLE IF NOT EXISTS visitors(id INTEGER PRIMARY KEY AUTOINCREMENT, name text, contact text, address text, vehicle text)")
+    cur.execute("CREATE TABLE IF NOT EXISTS visitors(id INTEGER PRIMARY KEY AUTOINCREMENT, name text, contact text, address text, vehicle text, covisitors text, belongings text, hostname text, hostcontact text)")
     print('visitors')
 
     cur.execute("CREATE TABLE IF NOT EXISTS visitors_log(id INTEGER PRIMARY KEY AUTOINCREMENT, visitorid INTEGER, approved INTEGER DEFAULT 0, approvedbyemployeeid INTEGER DEFAULT NULL, entrytime date DEFAULT NULL, validtill date DEFAULT NULL, exittime date DEFAULT NULL)")
