@@ -36,17 +36,17 @@ class ViewGatePasses:
         cmb_search.current(2)
         cmb_search.place(x=10, y=10, width=180)
 
-        txt_search = Entry(SearchFrame, textvariable=self.var_searchtxt, font=('times new roman', 15),
-                           bg='lightyellow').place(x=200, y=10)
-        btn_search = Button(SearchFrame, text='Search', command=self.search, font=('times new roman', 15), bg='#4caf50',
-                            fg='white').place(x=410, y=9, width=150, height=30)
+        Entry(SearchFrame, textvariable=self.var_searchtxt, font=('times new roman', 15),
+              bg='lightyellow').place(x=200, y=10)
+        Button(SearchFrame, text='Search', command=self.search, font=('times new roman', 15), bg='#4caf50',
+               fg='white').place(x=410, y=9, width=150, height=30)
 
-        button_enter_visitor = Button(self.root, text='Enter Visitor', command=self.enter_visitor,
-                                      font=('times new roman', 15), bg='#4caf50',
-                                      fg='white').place(x=200, y=130, width=150, height=30)
-        button_exit_visitor = Button(self.root, text='Exit Visitor', command=self.exit_visitor,
-                                     font=('times new roman', 15), bg='#4caf50',
-                                     fg='white').place(x=400, y=130, width=150, height=30)
+        Button(self.root, text='Enter Visitor', command=self.enter_visitor,
+               font=('times new roman', 15), bg='#4caf50',
+               fg='white').place(x=200, y=130, width=150, height=30)
+        Button(self.root, text='Exit Visitor', command=self.exit_visitor,
+               font=('times new roman', 15), bg='#4caf50',
+               fg='white').place(x=400, y=130, width=150, height=30)
 
         # =============== Gate Pass Details Grid =========
         emp_frame = Frame(self.root, bd=3, relief=RIDGE)
@@ -147,7 +147,7 @@ class ViewGatePasses:
 
             current_date_time = datetime.datetime.now()
             cur.execute(
-                'UPDATE visitors_log SET entry_time=? WHERE id=?',
+                'UPDATE visitors_log SET entrytime=? WHERE id=?',
                 (current_date_time, self.selected_visitor_log_id))
             con.commit()
             messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)

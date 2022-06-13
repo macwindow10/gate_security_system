@@ -22,7 +22,7 @@ class NewGatePass:
         self.host_name = StringVar()
         self.host_contact = StringVar()
 
-        new_gate_pass_frame = Frame(self.root, bd=4, relief=RIDGE, bg='green')
+        new_gate_pass_frame = Frame(self.root, bd=4, relief=RIDGE, bg='white')
         new_gate_pass_frame.place(x=360, y=50, width=400, height=550)
 
         font = tkinter.font.Font(name='times new roman', size=16)
