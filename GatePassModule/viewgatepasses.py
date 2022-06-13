@@ -1,8 +1,8 @@
-import datetime
 import sys
 from tkinter import *
 from tkinter import ttk, messagebox
 import sqlite3
+import datetime
 
 
 class ViewGatePasses:
@@ -129,7 +129,10 @@ class ViewGatePasses:
         print(self.selected_visitor_log_valid_till.get())
         print(self.selected_visitor_log_exit_time.get())
 
-        con = sqlite3.connect(database=r'../ims.db')
+        con = sqlite3.connect(database=r'../ims.db',
+                              detect_types=sqlite3.PARSE_DECLTYPES |
+                                           sqlite3.PARSE_COLNAMES
+                              )
         cur = con.cursor()
         try:
             if self.selected_visitor_log_id.get() == "":
@@ -138,17 +141,17 @@ class ViewGatePasses:
             if self.selected_visitor_log_approved.get() != "Approved":
                 messagebox.showerror("Error", "Gate pass is not approved", parent=self.root)
                 return
-            if self.selected_visitor_log_entry_time.get() is None:
+            if self.selected_visitor_log_entry_time.get() is not None:
                 messagebox.showerror("Error", "Visitor already entered on this gate pass", parent=self.root)
                 return
-            if self.selected_visitor_log_exit_time.get() is None:
+            if self.selected_visitor_log_exit_time.get() is not None:
                 messagebox.showerror("Error", "Visitor already exit on this gate pass", parent=self.root)
                 return
 
             current_date_time = datetime.datetime.now()
             cur.execute(
                 'UPDATE visitors_log SET entrytime=? WHERE id=?',
-                (current_date_time, self.selected_visitor_log_id))
+                (current_date_time, self.selected_visitor_log_id.get()))
             con.commit()
             messagebox.showinfo('Success', 'Gate pass approved', parent=self.root)
             self.show()
