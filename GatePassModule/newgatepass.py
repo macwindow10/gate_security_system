@@ -17,36 +17,59 @@ class NewGatePass:
         self.visitor_contact = StringVar()
         self.visitor_address = StringVar()
         self.visitor_vehicle = StringVar()
+        self.visitor_co_visitors = StringVar()
+        self.visitor_belongings = StringVar()
+        self.host_name = StringVar()
+        self.host_contact = StringVar()
 
         new_gate_pass_frame = Frame(self.root, bd=4, relief=RIDGE, bg='green')
-        new_gate_pass_frame.place(x=360, y=90, width=350, height=460)
+        new_gate_pass_frame.place(x=360, y=50, width=400, height=550)
 
         font = tkinter.font.Font(name='times new roman', size=16)
-        label_title = Label(new_gate_pass_frame, text='New Gate Pass', font=font, bg='#262626', fg='white').pack(
+        Label(new_gate_pass_frame, text='New Gate Pass', font=font, bg='#262626', fg='white').pack(
             side=TOP, fill=X)
-        lbl_visitor_name = Label(new_gate_pass_frame, text='Visitor Name: ', font=font,
-                                 bg='lightgrey').place(x=2, y=100)
-        txt_visitor_name = Entry(new_gate_pass_frame, textvariable=self.visitor_name,
-                                 font=font).place(x=140, y=102, width=170, height=32)
 
-        lbl_visitor_contact = Label(new_gate_pass_frame, text='Visitor Contact: ', font=font, bg='lightgrey').place(x=2,
-                                                                                                                    y=150)
-        txt_visitor_contact = Entry(new_gate_pass_frame, textvariable=self.visitor_contact,
-                                    font=font).place(x=140, y=152, width=170, height=32)
+        Label(new_gate_pass_frame, text='Visitor Name: ', font=font,
+              bg='lightgrey').place(x=2, y=100)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_name,
+              font=font).place(x=200, y=100, width=170, height=32)
 
-        lbl_visitor_address = Label(new_gate_pass_frame, text='Visitor Address: ', font=font, bg='lightgrey').place(x=2,
-                                                                                                                    y=200)
-        txt_visitor_address = Entry(new_gate_pass_frame, textvariable=self.visitor_address,
-                                    font=font).place(x=140, y=202, width=170, height=32)
+        Label(new_gate_pass_frame, text='Visitor Contact: ', font=font, bg='lightgrey').place(x=2, y=150)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_contact,
+              font=font).place(x=200, y=150, width=170, height=32)
 
-        lbl_visitor_contact = Label(new_gate_pass_frame, text='Visitor Vehicle: ', font=font, bg='lightgrey').place(x=2,
-                                                                                                                    y=250)
-        txt_visitor_contact = Entry(new_gate_pass_frame, textvariable=self.visitor_vehicle,
-                                    font=font).place(x=140, y=252, width=170, height=32)
+        Label(new_gate_pass_frame, text='Visitor Address: ', font=font, bg='lightgrey').place(x=2, y=200)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_address,
+              font=font).place(x=200, y=200, width=170, height=32)
 
-        btn_create = Button(new_gate_pass_frame, text='Create', command=self.create_gate_pass,
-                            font=font,
-                            bg='red', fg='white').place(x=190, y=302, width=100, height=25)
+        Label(new_gate_pass_frame, text='Visitor Vehicle: ', font=font, bg='lightgrey').place(x=2,
+                                                                                              y=250)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_vehicle,
+              font=font).place(x=200, y=250, width=170, height=32)
+
+        Label(new_gate_pass_frame, text='Co-Visitor Name(s): ', font=font, bg='lightgrey').place(x=2,
+                                                                                                 y=300)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_co_visitors,
+              font=font).place(x=200, y=300, width=170, height=32)
+
+        Label(new_gate_pass_frame, text='Visitor Belongings: ', font=font,
+              bg='lightgrey').place(x=2, y=350)
+        Entry(new_gate_pass_frame, textvariable=self.visitor_belongings,
+              font=font).place(x=200, y=350, width=170, height=32)
+
+        Label(new_gate_pass_frame, text='Host Name: ', font=font,
+              bg='lightgrey').place(x=2, y=400)
+        Entry(new_gate_pass_frame, textvariable=self.host_name,
+              font=font).place(x=200, y=400, width=170, height=32)
+
+        Label(new_gate_pass_frame, text='Host Contact: ', font=font,
+              bg='lightgrey').place(x=2, y=450)
+        Entry(new_gate_pass_frame, textvariable=self.host_contact,
+              font=font).place(x=200, y=450, width=170, height=32)
+
+        Button(new_gate_pass_frame, text='Create', command=self.create_gate_pass,
+               font=font,
+               bg='red', fg='white').place(x=200, y=500, width=100, height=25)
 
     def create_gate_pass(self):
         print('create_gate_pass')
