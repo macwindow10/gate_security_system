@@ -49,7 +49,7 @@ class Login_System:
                 if user == None:
                     messagebox.showerror("Error", "Invalid USERNAME/PASSWORD", parent=self.root)
                 else:
-                    if user[0] == 'GUARD':
+                    if user[0] == 'GUARD' or user[0] == 'Guard':
                         self.root.destroy()
                         os.system("python dashboard_guard.py {} {} {}".format("GUARD", user[1], user[2]))
         except Exception as ex:
